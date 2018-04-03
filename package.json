@@ -1,0 +1,25 @@
+{
+  "name": "vuex-webextension",
+  "version": "0.1.0'",
+  "description": "A Node.JS library to use vuex on webextensions on 'shared' context",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MitsuhaKitsune/vuex-webextension.git"
+  },
+  "keywords": [
+    "vuex",
+    "webextension",
+    "node",
+    "npm"
+  ],
+  "author": "Mitsuha Kitsune <kitsunemitsuha@gmail.com> (https://mitsuhakitsune.tk)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MitsuhaKitsune/vuex-webextension/issues"
+  },
+  "homepage": "https://github.com/MitsuhaKitsune/vuex-webextension#readme"
+}

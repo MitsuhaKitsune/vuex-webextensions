@@ -1,0 +1,3 @@
+const CONNECTION_NAME = 'vuex-webext';
+const INITIAL_STATE = '@@STORE_INITIAL_STATE';
+const SYNC_MUTATION = '@@STORE_SYNC_MUTATION';
