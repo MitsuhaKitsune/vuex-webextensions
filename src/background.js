@@ -1,10 +1,13 @@
-import { CONNECTION_NAME, INITIAL_STATE, SYNC_MUTATION } from './constants';
+/* global chrome */
 
-let store, receivedMutation;
+import constants from './constants';
 
-function handleMessage(msg, sender, callback) {
+let store = null;
+let receivedMutation = false;
 
-  if (msg.type == SYNC_MUTATION) {
+function handleMessage(msg) {
+
+  if (msg.type == constants.SYNC_MUTATION) {
     receivedMutation = true;
     store.commit(msg.data.type, msg.data.payload);
   }
@@ -12,13 +15,13 @@ function handleMessage(msg, sender, callback) {
 
 function handleConnection(connection) {
 
-  if (connection.name !== CONNECTION_NAME) {
+  if (connection.name !== constants.CONNECTION_NAME) {
     return;
   }
 
   // Send current state on connect
   connection.postMessage({
-    type: INITIAL_STATE,
+    type: constants.INITIAL_STATE,
     data: store.state
   });
 
@@ -28,7 +31,7 @@ function handleConnection(connection) {
   const unsubscribe = store.subscribe((mutation) => {
     if (!receivedMutation) {
       connection.postMessage({
-        type: SYNC_MUTATION,
+        type: constants.SYNC_MUTATION,
         data: mutation
       });
     } else {

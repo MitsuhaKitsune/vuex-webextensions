@@ -1,3 +1,5 @@
-const CONNECTION_NAME = 'vuex-webext';
-const INITIAL_STATE = '@@STORE_INITIAL_STATE';
-const SYNC_MUTATION = '@@STORE_SYNC_MUTATION';
+module.exports = Object.freeze({
+  CONNECTION_NAME: 'vuex-webext',
+  INITIAL_STATE: '@@STORE_INITIAL_STATE',
+  SYNC_MUTATION: '@@STORE_SYNC_MUTATION'
+});

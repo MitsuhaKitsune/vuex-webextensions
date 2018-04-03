@@ -1,28 +1,35 @@
 {
-  "name": "vuex-webextension",
-  "version": "0.1.0",
-  "description": "A Node.JS library to use vuex on webextensions on 'shared' context",
-  "main": "index.js",
+  "name": "vuex-webextensions",
+  "version": "0.1.1",
+  "description": "Use Vuex on WebExtensions on 'shared' context",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "babel src -d lib",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src -d dist",
+    "prepublish": "npm run lint && npm run test && npm run build",
+    "lint": "eslint src",
+    "test": "echo \"Tests aren't ready for now\" && exit 0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MitsuhaKitsune/vuex-webextension.git"
+    "url": "git+https://github.com/MitsuhaKitsune/vuex-webextensions.git"
   },
   "keywords": [
     "vuex",
     "webextension",
     "node",
-    "npm"
+    "npm",
+    "firefox",
+    "chrome"
   ],
   "author": "Mitsuha Kitsune <kitsunemitsuha@gmail.com> (https://mitsuhakitsune.tk)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MitsuhaKitsune/vuex-webextension/issues"
+    "url": "https://github.com/MitsuhaKitsune/vuex-webextensions/issues"
   },
-  "homepage": "https://github.com/MitsuhaKitsune/vuex-webextension#readme",
+  "homepage": "https://github.com/MitsuhaKitsune/vuex-webextensions#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.2",
@@ -33,5 +40,9 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.10.0"
+  },
+  "peerDependencies": {
+    "vue": ">=2.0.0",
+    "vuex": ">=2.0.0"
   }
 }

@@ -1,12 +1,15 @@
-import { CONNECTION_NAME, INITIAL_STATE, SYNC_MUTATION } from './constants';
+/* global chrome */
 
-let store, receivedMutation;
+import constants from './constants';
+
+let store = null;
+let receivedMutation = false;
 
 function handleMessage(msg) {
 
-  if (msg.type == INITIAL_STATE) {
+  if (msg.type == constants.INITIAL_STATE) {
     store.replaceState(msg.data);
-  } else if (msg.type == SYNC_MUTATION) {
+  } else if (msg.type == constants.SYNC_MUTATION) {
     receivedMutation = true;
     store.commit(msg.data.type, msg.data.payload);
   }
@@ -21,14 +24,15 @@ export default function getSharedStore(str) {
   store = str;
 
   // Init connection with the background
-  connection = chrome.runtime.connect({name: CONNECTION_NAME});
+  const connection = chrome.runtime.connect({ name: constants.CONNECTION_NAME });
+
   connection.onMessage.addListener(handleMessage);
 
   // Watch for mutation changes
   const unsubscribe = store.subscribe((mutation) => {
     if (!receivedMutation) {
       connection.postMessage({
-        type: SYNC_MUTATION,
+        type: constants.SYNC_MUTATION,
         data: mutation
       });
     } else {
