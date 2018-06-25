@@ -34,6 +34,12 @@ All done!
 
 ## Changelog
 
+##### 1.0.0
+
+> ⚠  This version have a breaking changes please check the new install method and remove the old install of your scripts
+
+* Convert module as "true" plugin of vuex
+
 ##### 0.1.1
 * Added lint and some prepublish methods to the package
 * Solve some issues detected by linter
