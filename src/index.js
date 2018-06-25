@@ -1,7 +1,7 @@
 /* global chrome */
 
 var constants = Object.freeze({
-  CONNECTION_NAME: 'vuex-webext',
+  CONNECTION_NAME: 'vuex-webextensions',
   INITIAL_STATE: '@@STORE_INITIAL_STATE',
   SYNC_MUTATION: '@@STORE_SYNC_MUTATION'
 });
@@ -9,6 +9,7 @@ var constants = Object.freeze({
 export default function() {
   var receivedMutation = false;
   var store = null;
+  var isBackground = false;
 
   function hookMutations(connection) {
     const unsubscribe = store.subscribe((mutation) => {
@@ -57,10 +58,9 @@ export default function() {
 
     // Get type of script and initialize connection
     chrome.runtime.getBackgroundPage(function(backgroundPage) {
+      self.isBackground = window === backgroundPage;
 
-      const isBackground = window === backgroundPage;
-
-      if (isBackground) {
+      if (self.isBackground) {
         chrome.runtime.onConnect.addListener(handleConnection);
       } else {
         // Init connection with the background
