@@ -1,6 +1,7 @@
 {
   "presets": [
-    "env"
+    "env",
+    "minify"
   ],
   "plugins": [
     "transform-flow-strip-types",
