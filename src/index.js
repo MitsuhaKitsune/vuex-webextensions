@@ -1,3 +1,5 @@
+/* global chrome */
+
 var constants = Object.freeze({
   CONNECTION_NAME: 'vuex-webext',
   INITIAL_STATE: '@@STORE_INITIAL_STATE',
@@ -64,14 +66,12 @@ export default function() {
 
       const isBackground = window === backgroundPage;
 
-      if (isBackground)
-      {
+      if (isBackground) {
         chrome.runtime.onConnect.addListener(handleConnection);
-      }
-      else
-      {
+      } else {
         // Init connection with the background
         const connection = chrome.runtime.connect({ name: constants.CONNECTION_NAME });
+
         connection.onMessage.addListener(handleBackgroundMessage);
 
         // Watch for mutation changes
@@ -92,4 +92,4 @@ export default function() {
       }
     });
   };
-};
+}
