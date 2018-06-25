@@ -10,17 +10,10 @@ export default function() {
   var receivedMutation = false;
   var store = null;
 
-  function handleBackgroundMessage(msg) {
+  function handleMessage(msg) {
     if (msg.type == constants.INITIAL_STATE) {
       store.replaceState(msg.data);
     } else if (msg.type == constants.SYNC_MUTATION) {
-      receivedMutation = true;
-      store.commit(msg.data.type, msg.data.payload);
-    }
-  }
-
-  function handleMessage(msg) {
-    if (msg.type == constants.SYNC_MUTATION) {
       receivedMutation = true;
       store.commit(msg.data.type, msg.data.payload);
     }
@@ -72,7 +65,7 @@ export default function() {
         // Init connection with the background
         const connection = chrome.runtime.connect({ name: constants.CONNECTION_NAME });
 
-        connection.onMessage.addListener(handleBackgroundMessage);
+        connection.onMessage.addListener(handleMessage);
 
         // Watch for mutation changes
         const unsubscribe = store.subscribe((mutation) => {
