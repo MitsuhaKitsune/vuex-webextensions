@@ -34,9 +34,13 @@ All done!
 
 ## Changelog
 
+##### 1.0.1
+
+* Remove old files from distribution
+
 ##### 1.0.0
 
-> ⚠  This version have a breaking changes please check the new install method and remove the old install of your scripts
+> ⚠  This version have a breaking changes please check the new install method and remove the old install on your scripts
 
 * Convert module as "true" plugin of vuex
 
