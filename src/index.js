@@ -10,13 +10,21 @@ export default function() {
   var receivedMutation = false;
   var store = null;
 
-  function handleMessage(msg) {
-    if (msg.type == constants.INITIAL_STATE) {
-      store.replaceState(msg.data);
-    } else if (msg.type == constants.SYNC_MUTATION) {
-      receivedMutation = true;
-      store.commit(msg.data.type, msg.data.payload);
-    }
+  function hookMutations(connection) {
+    const unsubscribe = store.subscribe((mutation) => {
+      if (!receivedMutation) {
+        connection.postMessage({
+          type: constants.SYNC_MUTATION,
+          data: mutation
+        });
+      } else {
+        receivedMutation = false;
+      }
+    });
+
+    connection.onDisconnect.addListener(() => {
+      unsubscribe();
+    });
   }
 
   function handleConnection(connection) {
@@ -31,23 +39,16 @@ export default function() {
     });
 
     connection.onMessage.addListener(handleMessage);
+    hookMutations(connection);
+  }
 
-    // Sync mutations on change with other parts of extension
-    const unsubscribe = store.subscribe((mutation) => {
-      if (!receivedMutation) {
-        connection.postMessage({
-          type: constants.SYNC_MUTATION,
-          data: mutation
-        });
-      } else {
-        receivedMutation = false;
-      }
-    });
-
-    // Unsuscribe on disconnect
-    connection.onDisconnect.addListener(() => {
-      unsubscribe();
-    });
+  function handleMessage(msg) {
+    if (msg.type == constants.INITIAL_STATE) {
+      store.replaceState(msg.data);
+    } else if (msg.type == constants.SYNC_MUTATION) {
+      receivedMutation = true;
+      store.commit(msg.data.type, msg.data.payload);
+    }
   }
 
   return function(str) {
@@ -66,22 +67,7 @@ export default function() {
         const connection = chrome.runtime.connect({ name: constants.CONNECTION_NAME });
 
         connection.onMessage.addListener(handleMessage);
-
-        // Watch for mutation changes
-        const unsubscribe = store.subscribe((mutation) => {
-          if (!receivedMutation) {
-            connection.postMessage({
-              type: constants.SYNC_MUTATION,
-              data: mutation
-            });
-          } else {
-            receivedMutation = false;
-          }
-        });
-
-        connection.onDisconnect.addListener(() => {
-          unsubscribe();
-        });
+        hookMutations(connection);
       }
     });
   };
