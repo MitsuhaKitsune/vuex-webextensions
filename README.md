@@ -34,6 +34,10 @@ All done!
 
 ## Changelog
 
+##### 1.0.2
+
+* Cleanup of redundant code
+
 ##### 1.0.1
 
 * Remove old files from distribution
