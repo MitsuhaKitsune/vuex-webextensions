@@ -51,9 +51,10 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
-##### 1.0.3
+##### 1.1.0
 
 * Implemented optional persistence of states
+* Now the plugin are minimized on build
 
 ##### 1.0.2
 

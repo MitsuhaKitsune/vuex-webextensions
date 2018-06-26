@@ -11,7 +11,10 @@ var defaultOptions = {
 };
 
 export default function(opt) {
-  let options = {...defaultOptions, ...opt};
+  const options = {
+    ...defaultOptions,
+    ...opt
+  };
   var receivedMutation = false;
   var store = null;
   var isBackground = false;
@@ -60,7 +63,7 @@ export default function(opt) {
   function filterObject(source, keys) {
     const newObject = {};
 
-    keys.forEach((obj, key) => {
+    keys.forEach((obj) => {
       newObject[obj] = source[obj];
     });
 
@@ -68,7 +71,7 @@ export default function(opt) {
   }
 
   function savePersistStates() {
-    chrome.storage.local.set({'@@vwe-persistence': JSON.stringify(filterObject(store.state, options.persistentStates))}, function() {});
+    chrome.storage.local.set({ '@@vwe-persistence': JSON.stringify(filterObject(store.state, options.persistentStates)) });
   }
 
   return function(str) {
@@ -81,16 +84,17 @@ export default function(opt) {
 
       if (isBackground) {
         // Restore persistent states on background store
-        if (options.persistentStates.length)
-        {
+        if (options.persistentStates.length) {
           chrome.storage.local.get('@@vwe-persistence', function(data) {
             if (data['@@vwe-persistence']) {
-              var savedStores = filterObject(JSON.parse(data['@@vwe-persistence']), options.persistentStates);
-              store.replaceState({...store.state, ...savedStores});
+              store.replaceState({
+                ...store.state,
+                ...filterObject(JSON.parse(data['@@vwe-persistence']), options.persistentStates)
+              });
             }
           });
 
-          store.subscribe((mutation) => {
+          store.subscribe(() => {
             savePersistStates();
           });
         }
