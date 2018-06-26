@@ -1,12 +1,17 @@
 /* global chrome */
 
 var constants = Object.freeze({
-  CONNECTION_NAME: 'vuex-webextensions',
   INITIAL_STATE: '@@STORE_INITIAL_STATE',
   SYNC_MUTATION: '@@STORE_SYNC_MUTATION'
 });
 
-export default function() {
+var defaultOptions = {
+  connectionName: 'vuex-webextensions',
+  persistentStates: []
+};
+
+export default function(opt) {
+  let options = {...defaultOptions, ...opt};
   var receivedMutation = false;
   var store = null;
   var isBackground = false;
@@ -29,7 +34,7 @@ export default function() {
   }
 
   function handleConnection(connection) {
-    if (connection.name !== constants.CONNECTION_NAME) {
+    if (connection.name !== options.connectionName) {
       return;
     }
 
@@ -52,19 +57,48 @@ export default function() {
     }
   }
 
+  function filterObject(source, keys) {
+    const newObject = {};
+
+    keys.forEach((obj, key) => {
+      newObject[obj] = source[obj];
+    });
+
+    return newObject;
+  }
+
+  function savePersistStates() {
+    chrome.storage.local.set({'@@vwe-persistence': JSON.stringify(filterObject(store.state, options.persistentStates))}, function() {});
+  }
+
   return function(str) {
     // Make store global
     store = str;
 
     // Get type of script and initialize connection
     chrome.runtime.getBackgroundPage(function(backgroundPage) {
-      self.isBackground = window === backgroundPage;
+      isBackground = window === backgroundPage;
 
-      if (self.isBackground) {
+      if (isBackground) {
+        // Restore persistent states on background store
+        if (options.persistentStates.length)
+        {
+          chrome.storage.local.get('@@vwe-persistence', function(data) {
+            if (data['@@vwe-persistence']) {
+              var savedStores = filterObject(JSON.parse(data['@@vwe-persistence']), options.persistentStates);
+              store.replaceState({...store.state, ...savedStores});
+            }
+          });
+
+          store.subscribe((mutation) => {
+            savePersistStates();
+          });
+        }
+
         chrome.runtime.onConnect.addListener(handleConnection);
       } else {
         // Init connection with the background
-        const connection = chrome.runtime.connect({ name: constants.CONNECTION_NAME });
+        const connection = chrome.runtime.connect({ name: options.connectionName });
 
         connection.onMessage.addListener(handleMessage);
         hookMutations(connection);

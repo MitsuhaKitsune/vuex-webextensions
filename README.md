@@ -32,7 +32,28 @@ export default new Vuex.Store({
 ```
 All done!
 
+## Persistent states
+
+You can establish through the options of the plugin the states that you want to be persistent, your data will be preserved after the restart of the extension or the browser.
+
+It is established passing the state names through persistentStates option in array:
+
+```javascript
+export default new Vuex.Store({
+  ...
+  plugins: [VuexWebExtensions({
+      persistentStates: ['stateone', 'statetwo']
+    })]
+});
+```
+
+Then `stateone` and `statetwo` gona have the value commited by last mutation after extension or browser restart.
+
 ## Changelog
+
+##### 1.0.3
+
+* Implemented optional persistence of states
 
 ##### 1.0.2
 
