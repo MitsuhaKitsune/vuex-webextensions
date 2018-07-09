@@ -51,6 +51,10 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.1.1
+
+* Fix plugin initialization on injected content scripts
+
 ##### 1.1.0
 
 * Implemented optional persistence of states

@@ -79,34 +79,43 @@ export default function(opt) {
     store = str;
 
     // Get type of script and initialize connection
-    chrome.runtime.getBackgroundPage(function(backgroundPage) {
-      isBackground = window === backgroundPage;
+    try {
+      chrome.runtime.getBackgroundPage(function(backgroundPage) {
+        isBackground = window === backgroundPage;
 
-      if (isBackground) {
-        // Restore persistent states on background store
-        if (options.persistentStates.length) {
-          chrome.storage.local.get('@@vwe-persistence', function(data) {
-            if (data['@@vwe-persistence']) {
-              store.replaceState({
-                ...store.state,
-                ...filterObject(JSON.parse(data['@@vwe-persistence']), options.persistentStates)
-              });
-            }
-          });
+        if (isBackground) {
+          // Restore persistent states on background store
+          if (options.persistentStates.length) {
+            chrome.storage.local.get('@@vwe-persistence', function(data) {
+              if (data['@@vwe-persistence']) {
+                store.replaceState({
+                  ...store.state,
+                  ...filterObject(JSON.parse(data['@@vwe-persistence']), options.persistentStates)
+                });
+              }
+            });
 
-          store.subscribe(() => {
-            savePersistStates();
-          });
+            store.subscribe(() => {
+              savePersistStates();
+            });
+          }
+
+          chrome.runtime.onConnect.addListener(handleConnection);
+        } else {
+          // Init connection with the background
+          const connection = chrome.runtime.connect({ name: options.connectionName });
+
+          connection.onMessage.addListener(handleMessage);
+          hookMutations(connection);
         }
+      });
+    // On injected content scripts chrome.runtime and window aren't available
+    } catch (err) {
+      // Init connection with the background
+      const connection = chrome.runtime.connect({ name: options.connectionName });
 
-        chrome.runtime.onConnect.addListener(handleConnection);
-      } else {
-        // Init connection with the background
-        const connection = chrome.runtime.connect({ name: options.connectionName });
-
-        connection.onMessage.addListener(handleMessage);
-        hookMutations(connection);
-      }
-    });
+      connection.onMessage.addListener(handleMessage);
+      hookMutations(connection);
+    }
   };
 }
