@@ -1,4 +1,5 @@
 # Vuex WebExtensions
+
 [![NPM](https://nodei.co/npm/vuex-webextensions.png)](https://npmjs.org/package/vuex-webextensions)
 
 [![Build Status](https://travis-ci.org/MitsuhaKitsune/vuex-webextensions.svg?branch=master)](https://travis-ci.org/MitsuhaKitsune/vuex-webextensions)
@@ -10,16 +11,17 @@ Uses the Vuex store instance on background script as master, and replicate the s
 You can work with the Vuex store like a unic instance (or standart Vue.js application), without worry for the different WebExtensions contexts, the module gona solve all WebExtensions problems for you automatically.
 
 ## Installation
+
 Run the following command inside your WebExtensions project to install the module:
 
-``npm install vuex-webextensions --save``
+`npm install vuex-webextensions --save`
 
 ## Usage
 
 Import the module into your store file:
 
 ```javascript
-import VuexWebExtensions from 'vuex-webextensions'
+import VuexWebExtensions from "vuex-webextensions";
 ```
 
 Then add it as plugin on Vuex store initialization:
@@ -30,9 +32,12 @@ export default new Vuex.Store({
   plugins: [VuexWebExtensions()]
 });
 ```
+
 All done!
 
 ## Persistent states
+
+> ⚠ Persistent states make use of `LocalStorage` to save the states in your browser, to use it, you should grant `storage` permision to your webextension
 
 You can establish through the options of the plugin the states that you want to be persistent, your data will be preserved after the restart of the extension or the browser.
 
@@ -53,34 +58,36 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ##### 1.1.1
 
-* Fix plugin initialization on injected content scripts
+- Fix plugin initialization on injected content scripts
 
 ##### 1.1.0
 
-* Implemented optional persistence of states
-* Now the plugin are minimized on build
+- Implemented optional persistence of states
+- Now the plugin are minimized on build
 
 ##### 1.0.2
 
-* Cleanup of redundant code
+- Cleanup of redundant code
 
 ##### 1.0.1
 
-* Remove old files from distribution
+- Remove old files from distribution
 
 ##### 1.0.0
 
-> ⚠  This version have a breaking changes please check the new install method and remove the old install on your scripts
+> ⚠ This version have a breaking changes please check the new install method and remove the old install on your scripts
 
-* Convert module as "true" plugin of vuex
+- Convert module as "true" plugin of vuex
 
 ##### 0.1.1
-* Added lint and some prepublish methods to the package
-* Solve some issues detected by linter
-* Added Travis CI for automatic build and tests
+
+- Added lint and some prepublish methods to the package
+- Solve some issues detected by linter
+- Added Travis CI for automatic build and tests
 
 ##### 0.1.0
-* First version
+
+- First version
 
 ## Contribute
 
@@ -90,7 +97,6 @@ If you have some improvements, new features or fixes feel free to fork this repo
 
 ## Pending work
 
-* Add example
-* Add optional persisted states on config to mantain data on restarts
-* Add tests and coverage
-* Publish to Awesome Vue.js lists when no more pending work and up version to 1.0.0 (stable)
+- Improve example
+- Add tests and coverage
+- Publish to Awesome Vue.js lists when no more pending work

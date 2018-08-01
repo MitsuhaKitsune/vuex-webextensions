@@ -1,12 +1,17 @@
 /* global chrome */
 
+// Copyright 2018 Mitsuha Kitsune <https://mitsuhakitsune.tk>
+// Licensed under the MIT license.
+
+import Browser from "./browser";
+
 var constants = Object.freeze({
-  INITIAL_STATE: '@@STORE_INITIAL_STATE',
-  SYNC_MUTATION: '@@STORE_SYNC_MUTATION'
+  MSG_INITIAL_STATE: "@@STORE_INITIAL_STATE",
+  MSG_SYNC_MUTATION: "@@STORE_SYNC_MUTATION"
 });
 
 var defaultOptions = {
-  connectionName: 'vuex-webextensions',
+  connectionName: "vuex-webextensions",
   persistentStates: []
 };
 
@@ -15,15 +20,17 @@ export default function(opt) {
     ...defaultOptions,
     ...opt
   };
+
+  var browser = new Browser();
   var receivedMutation = false;
   var store = null;
   var isBackground = false;
 
   function hookMutations(connection) {
-    const unsubscribe = store.subscribe((mutation) => {
+    const unsubscribe = store.subscribe(mutation => {
       if (!receivedMutation) {
         connection.postMessage({
-          type: constants.SYNC_MUTATION,
+          type: constants.MSG_SYNC_MUTATION,
           data: mutation
         });
       } else {
@@ -43,7 +50,7 @@ export default function(opt) {
 
     // Send current state on connect
     connection.postMessage({
-      type: constants.INITIAL_STATE,
+      type: constants.MSG_INITIAL_STATE,
       data: store.state
     });
 
@@ -52,9 +59,9 @@ export default function(opt) {
   }
 
   function handleMessage(msg) {
-    if (msg.type == constants.INITIAL_STATE) {
+    if (msg.type == constants.MSG_INITIAL_STATE) {
       store.replaceState(msg.data);
-    } else if (msg.type == constants.SYNC_MUTATION) {
+    } else if (msg.type == constants.MSG_SYNC_MUTATION) {
       receivedMutation = true;
       store.commit(msg.data.type, msg.data.payload);
     }
@@ -63,15 +70,11 @@ export default function(opt) {
   function filterObject(source, keys) {
     const newObject = {};
 
-    keys.forEach((obj) => {
+    keys.forEach(obj => {
       newObject[obj] = source[obj];
     });
 
     return newObject;
-  }
-
-  function savePersistStates() {
-    chrome.storage.local.set({ '@@vwe-persistence': JSON.stringify(filterObject(store.state, options.persistentStates)) });
   }
 
   return function(str) {
@@ -80,39 +83,43 @@ export default function(opt) {
 
     // Get type of script and initialize connection
     try {
-      chrome.runtime.getBackgroundPage(function(backgroundPage) {
-        isBackground = window === backgroundPage;
-
+      browser.isBackgroundScript(window).then(function(isBackground) {
         if (isBackground) {
           // Restore persistent states on background store
           if (options.persistentStates.length) {
-            chrome.storage.local.get('@@vwe-persistence', function(data) {
-              if (data['@@vwe-persistence']) {
+            browser.getPersistentStates().then(function(savedStates) {
+              if (savedStates) {
                 store.replaceState({
                   ...store.state,
-                  ...filterObject(JSON.parse(data['@@vwe-persistence']), options.persistentStates)
+                  ...filterObject(savedStates, options.persistentStates)
                 });
               }
             });
 
             store.subscribe(() => {
-              savePersistStates();
+              browser.savePersistentStates(
+                filterObject(store.state, options.persistentStates)
+              );
             });
           }
 
           chrome.runtime.onConnect.addListener(handleConnection);
         } else {
           // Init connection with the background
-          const connection = chrome.runtime.connect({ name: options.connectionName });
+          const connection = chrome.runtime.connect({
+            name: options.connectionName
+          });
 
           connection.onMessage.addListener(handleMessage);
           hookMutations(connection);
         }
       });
-    // On injected content scripts chrome.runtime and window aren't available
+      // On injected content scripts chrome.runtime and window aren't available
     } catch (err) {
       // Init connection with the background
-      const connection = chrome.runtime.connect({ name: options.connectionName });
+      const connection = chrome.runtime.connect({
+        name: options.connectionName
+      });
 
       connection.onMessage.addListener(handleMessage);
       hookMutations(connection);
