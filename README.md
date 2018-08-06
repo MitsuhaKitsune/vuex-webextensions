@@ -21,7 +21,7 @@ Run the following command inside your WebExtensions project to install the modul
 Import the module into your store file:
 
 ```javascript
-import VuexWebExtensions from "vuex-webextensions";
+import VuexWebExtensions from 'vuex-webextensions';
 ```
 
 Then add it as plugin on Vuex store initialization:
@@ -55,6 +55,10 @@ export default new Vuex.Store({
 Then `stateone` and `statetwo` gona have the value commited by last mutation after extension or browser restart.
 
 ## Changelog
+
+##### 1.1.2
+
+- Implemented own polyfills to make module compatible with Chrome, Firefox and Edge
 
 ##### 1.1.1
 
