@@ -10,21 +10,21 @@
 
 var browsers = Object.freeze({
   firefox: {
-    name: "Mozilla Firefox",
-    namespace: "browser",
-    type: "promise"
+    name: 'Mozilla Firefox',
+    namespace: 'browser',
+    type: 'promise'
   },
 
   chrome: {
-    name: "Google Chrome",
-    namespace: "chrome",
-    type: "callback"
+    name: 'Google Chrome',
+    namespace: 'chrome',
+    type: 'callback'
   },
 
   edge: {
-    name: "Microsoft Edge",
-    namespace: "browser",
-    type: "callback"
+    name: 'Microsoft Edge',
+    namespace: 'browser',
+    type: 'callback'
   }
 });
 
@@ -35,8 +35,8 @@ class Browser {
   }
 
   detectBrowser() {
-    if (typeof chrome !== "undefined") {
-      if (typeof browser !== "undefined") {
+    if (typeof chrome !== 'undefined') {
+      if (typeof browser !== 'undefined') {
         this.browser = browsers.firefox;
 
         return;
@@ -49,7 +49,7 @@ class Browser {
   }
 
   isBackgroundScript(script) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       try {
         if (this.browser == browsers.chrome) {
           chrome.runtime.getBackgroundPage(function(backgroundPage) {
@@ -76,25 +76,25 @@ class Browser {
     return new Promise((resolve, reject) => {
       try {
         if (this.browser == browsers.chrome) {
-          chrome.storage.local.get("@@vwe-persistence", function(data) {
-            if (data["@@vwe-persistence"]) {
-              return resolve(JSON.parse(data["@@vwe-persistence"]));
+          chrome.storage.local.get('@@vwe-persistence', function(data) {
+            if (data['@@vwe-persistence']) {
+              return resolve(JSON.parse(data['@@vwe-persistence']));
             }
 
             return resolve(null);
           });
         } else if (this.browser == browsers.firefox) {
-          browser.storage.local.get("@@vwe-persistence").then(function(data) {
-            if (data["@@vwe-persistence"]) {
-              return resolve(JSON.parse(data["@@vwe-persistence"]));
+          browser.storage.local.get('@@vwe-persistence').then(function(data) {
+            if (data['@@vwe-persistence']) {
+              return resolve(JSON.parse(data['@@vwe-persistence']));
             }
 
             return resolve(null);
           });
         } else if (this.browser == browsers.edge) {
-          browser.storage.local.get("@@vwe-persistence", function(data) {
-            if (data["@@vwe-persistence"]) {
-              return resolve(JSON.parse(data["@@vwe-persistence"]));
+          browser.storage.local.get('@@vwe-persistence', function(data) {
+            if (data['@@vwe-persistence']) {
+              return resolve(JSON.parse(data['@@vwe-persistence']));
             }
 
             return resolve(null);
@@ -112,32 +112,26 @@ class Browser {
     if (this.browser == browsers.chrome) {
       try {
         chrome.storage.local.set({
-          "@@vwe-persistence": JSON.stringify(datas)
+          '@@vwe-persistence': JSON.stringify(datas)
         });
       } catch (err) {
-        throw new Error(
-          `Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`
-        );
+        throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
       }
     } else if (this.browser == browsers.firefox) {
       try {
         browser.storage.local.set({
-          "@@vwe-persistence": JSON.stringify(datas)
+          '@@vwe-persistence': JSON.stringify(datas)
         });
       } catch (err) {
-        throw new Error(
-          `Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`
-        );
+        throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
       }
     } else if (this.browser == browsers.edge) {
       try {
         browser.storage.local.set({
-          "@@vwe-persistence": JSON.stringify(datas)
+          '@@vwe-persistence': JSON.stringify(datas)
         });
       } catch (err) {
-        throw new Error(
-          `Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`
-        );
+        throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
       }
     }
   }

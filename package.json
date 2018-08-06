@@ -8,8 +8,11 @@
   ],
   "scripts": {
     "build": "rimraf dist && babel src -d dist",
-    "prepublish": "npm run lint && npm run test && npm run build",
     "lint": "eslint src",
+    "precommit": "npm run lint && pretty-quick --staged",
+    "prepublish": "npm run lint && npm run test && npm run build",
+    "prettier": "prettier **/*.{js,json,css,vue}",
+    "prettier:write": "npm run prettier -- --write",
     "test": "echo \"Tests aren't ready for now\" && exit 0"
   },
   "repository": {
@@ -42,6 +45,9 @@
     "eslint": "^5.2.0",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
+    "husky": "^0.14.3",
+    "prettier": "^1.14.0",
+    "pretty-quick": "^1.6.0",
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {

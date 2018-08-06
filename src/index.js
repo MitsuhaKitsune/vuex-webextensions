@@ -3,15 +3,15 @@
  *  Licensed under the MIT license.
  */
 
-import Browser from "./browser";
+import Browser from './browser';
 
 var constants = Object.freeze({
-  MSG_INITIAL_STATE: "@@STORE_INITIAL_STATE",
-  MSG_SYNC_MUTATION: "@@STORE_SYNC_MUTATION"
+  MSG_INITIAL_STATE: '@@STORE_INITIAL_STATE',
+  MSG_SYNC_MUTATION: '@@STORE_SYNC_MUTATION'
 });
 
 var defaultOptions = {
-  connectionName: "vuex-webextensions",
+  connectionName: 'vuex-webextensions',
   persistentStates: []
 };
 
@@ -26,7 +26,7 @@ export default function(opt) {
   var store = null;
 
   function hookMutations(connection) {
-    const unsubscribe = store.subscribe(mutation => {
+    const unsubscribe = store.subscribe((mutation) => {
       if (!receivedMutation) {
         connection.postMessage({
           type: constants.MSG_SYNC_MUTATION,
@@ -69,7 +69,7 @@ export default function(opt) {
   function filterObject(source, keys) {
     const newObject = {};
 
-    keys.forEach(obj => {
+    keys.forEach((obj) => {
       newObject[obj] = source[obj];
     });
 
@@ -95,9 +95,7 @@ export default function(opt) {
           });
 
           store.subscribe(() => {
-            browser.savePersistentStates(
-              filterObject(store.state, options.persistentStates)
-            );
+            browser.savePersistentStates(filterObject(store.state, options.persistentStates));
           });
         }
 
