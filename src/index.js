@@ -1,7 +1,7 @@
-/* global chrome */
-
-// Copyright 2018 Mitsuha Kitsune <https://mitsuhakitsune.tk>
-// Licensed under the MIT license.
+/*
+ *  Copyright 2018 Mitsuha Kitsune <https://mitsuhakitsune.tk>
+ *  Licensed under the MIT license.
+ */
 
 import Browser from "./browser";
 
@@ -24,7 +24,6 @@ export default function(opt) {
   var browser = new Browser();
   var receivedMutation = false;
   var store = null;
-  var isBackground = false;
 
   function hookMutations(connection) {
     const unsubscribe = store.subscribe(mutation => {
@@ -43,7 +42,7 @@ export default function(opt) {
     });
   }
 
-  function handleConnection(connection) {
+  function onConnection(connection) {
     if (connection.name !== options.connectionName) {
       return;
     }
@@ -82,47 +81,34 @@ export default function(opt) {
     store = str;
 
     // Get type of script and initialize connection
-    try {
-      browser.isBackgroundScript(window).then(function(isBackground) {
-        if (isBackground) {
-          // Restore persistent states on background store
-          if (options.persistentStates.length) {
-            browser.getPersistentStates().then(function(savedStates) {
-              if (savedStates) {
-                store.replaceState({
-                  ...store.state,
-                  ...filterObject(savedStates, options.persistentStates)
-                });
-              }
-            });
-
-            store.subscribe(() => {
-              browser.savePersistentStates(
-                filterObject(store.state, options.persistentStates)
-              );
-            });
-          }
-
-          chrome.runtime.onConnect.addListener(handleConnection);
-        } else {
-          // Init connection with the background
-          const connection = chrome.runtime.connect({
-            name: options.connectionName
+    browser.isBackgroundScript(window).then(function(isBackground) {
+      if (isBackground) {
+        // Restore persistent states on background store
+        if (options.persistentStates.length) {
+          browser.getPersistentStates().then(function(savedStates) {
+            if (savedStates) {
+              store.replaceState({
+                ...store.state,
+                ...filterObject(savedStates, options.persistentStates)
+              });
+            }
           });
 
-          connection.onMessage.addListener(handleMessage);
-          hookMutations(connection);
+          store.subscribe(() => {
+            browser.savePersistentStates(
+              filterObject(store.state, options.persistentStates)
+            );
+          });
         }
-      });
-      // On injected content scripts chrome.runtime and window aren't available
-    } catch (err) {
-      // Init connection with the background
-      const connection = chrome.runtime.connect({
-        name: options.connectionName
-      });
 
-      connection.onMessage.addListener(handleMessage);
-      hookMutations(connection);
-    }
+        browser.handleConnection(onConnection);
+      } else {
+        // Init connection with the background
+        const connection = browser.connectToBackground(options.connectionName);
+
+        connection.onMessage.addListener(handleMessage);
+        hookMutations(connection);
+      }
+    });
   };
 }

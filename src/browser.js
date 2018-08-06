@@ -1,8 +1,12 @@
-// Copyright 2018 Mitsuha Kitsune <https://mitsuhakitsune.tk>
-// Licensed under the MIT license.
+/*
+ *  Copyright 2018 Mitsuha Kitsune <https://mitsuhakitsune.tk>
+ *  Licensed under the MIT license.
+ *
+ *  Custom class to apply polyfills without dependencies
+ *  and offer crossbrowser compatibility
+ */
 
-// Custom class to apply polyfills without dependencies
-// and offer crossbrowser compatibility
+/* global chrome, browser */
 
 var browsers = Object.freeze({
   firefox: {
@@ -26,90 +30,81 @@ var browsers = Object.freeze({
 
 class Browser {
   constructor() {
-    this.browser = this.detectBrowser();
+    this.browser = null;
+    this.detectBrowser();
   }
 
   detectBrowser() {
     if (typeof chrome !== "undefined") {
       if (typeof browser !== "undefined") {
-        return browsers.firefox;
-      } else {
-        return browsers.chrome;
+        this.browser = browsers.firefox;
+
+        return;
       }
-    } else {
-      return browsers.edge;
+
+      this.browser = browsers.chrome;
     }
+
+    this.browser = browsers.edge;
   }
 
   isBackgroundScript(script) {
-    return new Promise((resolve, reject) => {
-      if (this.browser == browsers.chrome) {
-        try {
+    return new Promise(resolve => {
+      try {
+        if (this.browser == browsers.chrome) {
           chrome.runtime.getBackgroundPage(function(backgroundPage) {
             return resolve(script === backgroundPage);
           });
-        } catch (e) {
-          return resolve(false);
-        }
-      } else if (this.browser == browsers.firefox) {
-        try {
+        } else if (this.browser == browsers.firefox) {
           browser.runtime.getBackgroundPage().then(function(backgroundPage) {
             return resolve(script === backgroundPage);
           });
-        } catch (e) {
-          return resolve(false);
-        }
-      } else if (this.browser == browsers.edge) {
-        try {
+        } else if (this.browser == browsers.edge) {
           browser.runtime.getBackgroundPage(function(backgroundPage) {
             return resolve(script === backgroundPage);
           });
-        } catch (e) {
-          return resolve(false);
         }
+      } catch (err) {
+        return resolve(false);
       }
+
+      return resolve(false);
     });
   }
 
   getPersistentStates() {
     return new Promise((resolve, reject) => {
-      if (this.browser == browsers.chrome) {
-        try {
+      try {
+        if (this.browser == browsers.chrome) {
           chrome.storage.local.get("@@vwe-persistence", function(data) {
             if (data["@@vwe-persistence"]) {
               return resolve(JSON.parse(data["@@vwe-persistence"]));
-            } else {
-              return resolve(null);
             }
+
+            return resolve(null);
           });
-        } catch (e) {
-          return reject(e);
-        }
-      } else if (this.browser == browsers.firefox) {
-        try {
+        } else if (this.browser == browsers.firefox) {
           browser.storage.local.get("@@vwe-persistence").then(function(data) {
             if (data["@@vwe-persistence"]) {
               return resolve(JSON.parse(data["@@vwe-persistence"]));
-            } else {
-              return resolve(null);
             }
+
+            return resolve(null);
           });
-        } catch (e) {
-          return reject(e);
-        }
-      } else if (this.browser == browsers.edge) {
-        try {
+        } else if (this.browser == browsers.edge) {
           browser.storage.local.get("@@vwe-persistence", function(data) {
             if (data["@@vwe-persistence"]) {
               return resolve(JSON.parse(data["@@vwe-persistence"]));
-            } else {
-              return resolve(null);
             }
+
+            return resolve(null);
           });
-        } catch (e) {
-          return reject(e);
         }
+      } catch (err) {
+        return reject(err);
       }
+
+      return resolve(null);
     });
   }
 
@@ -119,8 +114,8 @@ class Browser {
         chrome.storage.local.set({
           "@@vwe-persistence": JSON.stringify(datas)
         });
-      } catch (e) {
-        console.error(
+      } catch (err) {
+        throw new Error(
           `Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`
         );
       }
@@ -129,8 +124,8 @@ class Browser {
         browser.storage.local.set({
           "@@vwe-persistence": JSON.stringify(datas)
         });
-      } catch (e) {
-        console.error(
+      } catch (err) {
+        throw new Error(
           `Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`
         );
       }
@@ -139,12 +134,32 @@ class Browser {
         browser.storage.local.set({
           "@@vwe-persistence": JSON.stringify(datas)
         });
-      } catch (e) {
-        console.error(
+      } catch (err) {
+        throw new Error(
           `Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`
         );
       }
     }
+  }
+
+  handleConnection(callback) {
+    if (this.browser == browsers.chrome) {
+      return chrome.runtime.onConnect.addListener(callback);
+    }
+
+    return browser.runtime.onConnect.addListener(callback);
+  }
+
+  connectToBackground(connectionName) {
+    if (this.browser == browsers.chrome) {
+      return chrome.runtime.connect({
+        name: connectionName
+      });
+    }
+
+    return browser.runtime.connect({
+      name: connectionName
+    });
   }
 }
 
