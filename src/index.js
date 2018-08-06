@@ -21,7 +21,7 @@ export default function(opt) {
     ...opt
   };
 
-  var browser = new Browser();
+  const browser = new Browser();
   var receivedMutation = false;
   var store = null;
 

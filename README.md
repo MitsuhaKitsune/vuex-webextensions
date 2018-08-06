@@ -56,6 +56,10 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.1.3
+
+- Fix typo that prevent initialization of background store
+
 ##### 1.1.2
 
 - Implemented own polyfills to make module compatible with Chrome, Firefox and Edge

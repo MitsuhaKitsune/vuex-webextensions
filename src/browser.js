@@ -68,7 +68,7 @@ class Browser {
         return resolve(false);
       }
 
-      return resolve(false);
+      return false;
     });
   }
 
