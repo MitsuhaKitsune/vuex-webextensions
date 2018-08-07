@@ -1,0 +1,50 @@
+#vwe-bar {
+  background-color: #35495e;
+  height: 40px;
+  line-height: 40px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+#vwe-bar div {
+  display: inline-block;
+  line-height: 40px;
+  height: 40px;
+}
+
+#vwe-icon {
+  height: 40px;
+  width: 40px;
+  background-image: url(../icons/icon_48.png);
+  background-size: 35px 35px;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-right: 5px;
+}
+
+#vwe-bar-right {
+  position: absolute;
+  right: 0px;
+  padding-right: 10px;
+}
+
+#vwe-bar-right div {
+  margin-left: 20px;
+}
+
+#vwe-bar div input {
+  height: 25px;
+  line-height: 25px;
+}
+
+#vwe-bar div button {
+  height: 25px;
+  width: 25px;
+  line-height: 25px;
+  border: 1px solid red;
+  margin: 0 2px;
+  border: 1px solid #504f4f;
+  padding: 0;
+  border-radius: 3px;
+}

@@ -1,6 +1,12 @@
 <template>
-  <div>
-    <p>{{ this.timer }}</p>
+  <div id="vwe-bar">
+    <div id="vwe-icon"></div>
+    <div><h4>Vuex WebExtensions injected content script example</h4></div>
+    <div id="vwe-bar-right">
+      <div>Timer: {{ this.timer }}</div>
+      <div>Name: <input type="text" name="name" v-model="name"></div>
+      <div>Counter: {{ this.counter }} <button v-on:click="decrementCounter">-</button><button v-on:click="incrementCounter">+</button></div>
+    </div>
   </div>
 </template>
 
@@ -12,12 +18,14 @@ export default {
     return {};
   },
 
-  computed: mapState(['timer']),
+  computed: mapState(['timer', 'name', 'counter']),
+
+  methods: {
+    ...mapActions(['incrementCounter', 'decrementCounter']),
+  },
 };
 </script>
 
-<style lang="scss" scoped>
-p {
-  font-size: 20px;
-}
+<style>
+@import './content.css';
 </style>

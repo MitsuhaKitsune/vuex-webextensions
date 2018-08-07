@@ -1,2 +1,3 @@
-export const UPDATE_FOO = 'UPDATE_FOO';
 export const UPDATE_TIMER = 'UPDATE_TIMER';
+export const UPDATE_NAME = 'UPDATE_NAME';
+export const UPDATE_COUNTER = 'UPDATE_COUNTER';

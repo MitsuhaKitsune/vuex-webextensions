@@ -1,5 +1,13 @@
 import * as types from './mutation-types';
 
-export const setFoo = ({ commit }, payload) => {
-  commit(types.UPDATE_FOO, payload);
+export const setName = ({ commit }, payload) => {
+  commit(types.UPDATE_NAME, payload);
+};
+
+export const incrementCounter = ({ commit }) => {
+  commit('incrementCounter');
+};
+
+export const decrementCounter = ({ commit }) => {
+  commit('decrementCounter');
 };

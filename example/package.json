@@ -1,7 +1,7 @@
 {
   "name": "vuex-webext-example",
   "version": "1.0.0",
-  "description": "A webextension example for vuex-webextensions",
+  "description": "A webextension example for Vuex WebExtensions",
   "author": "Mitsuha Kitsune <kitsunemitsuha@gmail.com>",
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
