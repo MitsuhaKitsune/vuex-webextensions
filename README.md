@@ -56,6 +56,14 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.2.0
+
+- Fix sync problems with the new connections pool
+- Fix crazy loop with mutations, now don't return again to the original sender script and start looping
+- Fix broken persistent states by b6e66f2 (Sorry :/)
+- Persistent states now are only saved when data change to don't abuse of I/O on hardcore mutated environments
+- Background and content scripts handling separated on his own class for easy development
+
 ##### 1.1.3
 
 - Fix typo that prevent initialization of background store

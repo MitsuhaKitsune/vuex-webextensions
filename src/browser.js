@@ -104,7 +104,7 @@ class Browser {
         return reject(err);
       }
 
-      return resolve(null);
+      return false;
     });
   }
 
