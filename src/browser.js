@@ -43,6 +43,8 @@ class Browser {
       }
 
       this.browser = browsers.chrome;
+      
+      return;
     }
 
     this.browser = browsers.edge;
