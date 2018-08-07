@@ -56,6 +56,10 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.2.1
+
+- Fix Chrome detection because missed return, thanks to @Stormsher
+
 ##### 1.2.0
 
 - Fix sync problems with the new connections pool
