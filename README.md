@@ -56,6 +56,10 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.2.2
+
+- Fix persistent states initialization when localstorage don't have data yet
+
 ##### 1.2.1
 
 - Fix Chrome detection because missed return, thanks to @Stormsher

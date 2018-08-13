@@ -13,10 +13,12 @@ class BackgroundScript {
     // Restore persistent state datas from localstorage
     if (this.settings.persistentStates.length) {
       this.browser.getPersistentStates().then((savedStates) => {
-        this.store.replaceState({
-          ...this.store.state,
-          ...this.filterObject(savedStates, this.settings.persistentStates)
-        });
+        if (savedStates !== null) {
+          this.store.replaceState({
+            ...this.store.state,
+            ...this.filterObject(savedStates, this.settings.persistentStates)
+          });
+        }
       });
     }
 
