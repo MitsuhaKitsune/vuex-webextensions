@@ -80,7 +80,7 @@ class ContentScript {
     }
 
     for (var i = 0; i < this.pendingMutations.length; i++) {
-      this.store.commit(this.pendingMutations[i]);
+      this.store.commit(this.pendingMutations[i].type, this.pendingMutations[i].payload);
 
       // Clean the pending mutation when are applied
       this.pendingMutations.splice(i, 1);
