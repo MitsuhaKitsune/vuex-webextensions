@@ -13,6 +13,8 @@ class ContentScript {
       .substr(2, 9);
     this.connection = null;
     this.receivedMutations = [];
+    this.initialized = false;
+    this.pendingMutations = [];
 
     // Connect to background script
     this.connection = browser.connectToBackground(`${this.settings.connectionName}_${this.scriptId}`);
@@ -31,13 +33,25 @@ class ContentScript {
   onMessage(message) {
     if (message.type == '@@STORE_INITIAL_STATE') {
       this.store.replaceState(message.data);
+      this.initialized = true;
+      this.processPendingMutations();
     } else if (message.type == '@@STORE_SYNC_MUTATION') {
+      // Don't commit any mutation from other contexts before the initial state sync
+      if (!this.initialized) {
+        return;
+      }
+
       this.receivedMutations.push(message.data);
       this.store.commit(message.data.type, message.data.payload);
     }
   }
 
   hookMutation(mutation) {
+    // If store isn't initialized yet, just enque the mutation to reaply it after sync
+    if (!this.initialized) {
+      return this.pendingMutations.push(mutation);
+    }
+
     // If received mutations list are empty it's own mutation, send to background
     if (!this.receivedMutations.length) {
       return this.sendMutation(mutation);
@@ -58,6 +72,19 @@ class ContentScript {
       type: '@@STORE_SYNC_MUTATION',
       data: mutation
     });
+  }
+
+  processPendingMutations() {
+    if (!this.pendingMutations.length) {
+      return;
+    }
+
+    for (var i = 0; i < this.pendingMutations.length; i++) {
+      this.store.commit(this.pendingMutations[i]);
+
+      // Clean the pending mutation when are applied
+      this.pendingMutations.splice(i, 1);
+    }
   }
 }
 
