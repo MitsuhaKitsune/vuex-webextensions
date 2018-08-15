@@ -56,6 +56,10 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.2.4
+
+- Fix pending mutations queue, thanks to @KBoyarchuk
+
 ##### 1.2.3
 
 - Enque commited mutations to store before initialization on content scripts
