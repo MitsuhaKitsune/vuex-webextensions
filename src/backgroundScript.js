@@ -41,14 +41,8 @@ class BackgroundScript {
         }
       }
 
-      // Compare first if previous saved values change to save to persistent states
-      this.browser.getPersistentStates().then((savedStates) => {
-        var currentState = this.filterObject(this.store.state, this.settings.persistentStates);
-
-        if (JSON.stringify(currentState) !== JSON.stringify(savedStates)) {
-          browser.savePersistentStates(currentState);
-        }
-      });
+      // Save persistent states to local storage
+      browser.savePersistentStates(this.filterObject(this.store.state, this.settings.persistentStates));
     });
 
     // Start listening for connections

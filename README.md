@@ -56,6 +56,10 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.2.5
+
+- Improve performance deleting a redundant read/check on persistent states
+
 ##### 1.2.4
 
 - Fix pending mutations queue, thanks to @KBoyarchuk
