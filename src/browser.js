@@ -80,7 +80,7 @@ class Browser {
         if (this.browser == browsers.chrome) {
           chrome.storage.local.get('@@vwe-persistence', function(data) {
             if (data['@@vwe-persistence']) {
-              return resolve(JSON.parse(data['@@vwe-persistence']));
+              return resolve(data['@@vwe-persistence']);
             }
 
             return resolve(null);
@@ -88,7 +88,7 @@ class Browser {
         } else if (this.browser == browsers.firefox) {
           browser.storage.local.get('@@vwe-persistence').then(function(data) {
             if (data['@@vwe-persistence']) {
-              return resolve(JSON.parse(data['@@vwe-persistence']));
+              return resolve(data['@@vwe-persistence']);
             }
 
             return resolve(null);
@@ -96,7 +96,7 @@ class Browser {
         } else if (this.browser == browsers.edge) {
           browser.storage.local.get('@@vwe-persistence', function(data) {
             if (data['@@vwe-persistence']) {
-              return resolve(JSON.parse(data['@@vwe-persistence']));
+              return resolve(data['@@vwe-persistence']);
             }
 
             return resolve(null);
@@ -114,7 +114,7 @@ class Browser {
     if (this.browser == browsers.chrome) {
       try {
         chrome.storage.local.set({
-          '@@vwe-persistence': JSON.stringify(datas)
+          '@@vwe-persistence': datas
         });
       } catch (err) {
         throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
@@ -122,7 +122,7 @@ class Browser {
     } else if (this.browser == browsers.firefox) {
       try {
         browser.storage.local.set({
-          '@@vwe-persistence': JSON.stringify(datas)
+          '@@vwe-persistence': datas
         });
       } catch (err) {
         throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
@@ -130,7 +130,7 @@ class Browser {
     } else if (this.browser == browsers.edge) {
       try {
         browser.storage.local.set({
-          '@@vwe-persistence': JSON.stringify(datas)
+          '@@vwe-persistence': datas
         });
       } catch (err) {
         throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
