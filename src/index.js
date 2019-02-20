@@ -13,6 +13,11 @@ var defaultOptions = {
 };
 
 export default function(opt) {
+  if (typeof window === 'undefined') {
+    // This allows authors to unit test more easily
+    return () => {}; // eslint-disable-line no-empty-function
+  }
+
   const options = {
     ...defaultOptions,
     ...opt
