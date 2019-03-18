@@ -27,7 +27,7 @@
     "firefox",
     "chrome"
   ],
-  "author": "Mitsuha Kitsune <kitsunemitsuha@gmail.com> (https://mitsuhakitsune.tk)",
+  "author": "Mitsuha Kitsune <kitsunemitsuha@gmail.com> (https://mitsuhakitsune.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MitsuhaKitsune/vuex-webextensions/issues"

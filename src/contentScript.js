@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018 Mitsuha Kitsune <https://mitsuhakitsune.tk>
+ *  Copyright 2018 - 2019 Mitsuha Kitsune <https://mitsuhakitsune.com>
  *  Licensed under the MIT license.
  */
 
