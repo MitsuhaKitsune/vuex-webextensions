@@ -31,7 +31,9 @@ class ContentScript {
   }
 
   onMessage(message) {
-    if (!message.type) return;
+    if (!message.type) {
+      return;
+    }
 
     if (message.type == '@@STORE_INITIAL_STATE') {
       this.store.replaceState(message.data);
