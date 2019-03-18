@@ -117,7 +117,7 @@ class Browser {
           '@@vwe-persistence': datas
         });
       } catch (err) {
-        throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
+        throw new Error(`Vuex WebExtensions: Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
       }
     } else if (this.browser == browsers.firefox) {
       try {
@@ -125,7 +125,7 @@ class Browser {
           '@@vwe-persistence': datas
         });
       } catch (err) {
-        throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
+        throw new Error(`Vuex WebExtensions: Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
       }
     } else if (this.browser == browsers.edge) {
       try {
@@ -133,7 +133,7 @@ class Browser {
           '@@vwe-persistence': datas
         });
       } catch (err) {
-        throw new Error(`Vuex WebExtensions: Can't write persistent states to local store. You grant storage permision to your WebExtension?`);
+        throw new Error(`Vuex WebExtensions: Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
       }
     }
   }
