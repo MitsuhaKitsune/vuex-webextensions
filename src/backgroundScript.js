@@ -94,7 +94,7 @@ class BackgroundScript {
   }
 
   onMessage(connection, message) {
-    if (message.type != '@@STORE_SYNC_MUTATION') {
+    if (!message.type || message.type !== '@@STORE_SYNC_MUTATION') {
       return;
     }
 
