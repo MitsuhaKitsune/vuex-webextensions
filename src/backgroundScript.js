@@ -3,6 +3,8 @@
  *  Licensed under the MIT license.
  */
 
+import { filterObject } from './utils';
+
 class BackgroundScript {
   constructor(store, browser, settings) {
     this.store = store;
@@ -16,7 +18,7 @@ class BackgroundScript {
         if (savedStates !== null) {
           this.store.replaceState({
             ...this.store.state,
-            ...this.filterObject(savedStates, this.settings.persistentStates)
+            ...filterObject(savedStates, this.settings.persistentStates)
           });
         }
       });
@@ -42,23 +44,13 @@ class BackgroundScript {
       }
 
       // Save persistent states to local storage
-      browser.savePersistentStates(this.filterObject(this.store.state, this.settings.persistentStates));
+      browser.savePersistentStates(filterObject(this.store.state, this.settings.persistentStates));
     });
 
     // Start listening for connections
     browser.handleConnection((connection) => {
       this.onConnection(connection);
     });
-  }
-
-  filterObject(source, keys) {
-    const newObject = {};
-
-    keys.forEach((obj) => {
-      newObject[obj] = source[obj];
-    });
-
-    return newObject;
   }
 
   onConnection(connection) {
