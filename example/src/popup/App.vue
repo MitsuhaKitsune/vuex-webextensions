@@ -5,11 +5,13 @@
       <div><h4>Vuex WebExtensions popup script example</h4></div>
     </div>
     <div>Timer: {{ this.timer }}</div>
-    <div>Name: <input type="text" name="name" v-model="name"></div>
+    <div>Name: <input type="text" :value="name" @input="updateName" /></div>
     <div>Counter: {{ this.counter }} <button v-on:click="decrementCounter">-</button><button v-on:click="incrementCounter">+</button></div>
     <p>Timer aren't persistent by default and it's handled by background script increasing the value each second.</p>
     <p>Name and counter are persistent and handle data entered by user on any part of the webextension.</p>
-    <p>To test injected content scripts go to any <a href="https://github.com/MitsuhaKitsune/vuex-webextensions">Github url</a> and check the bar injected on the top of the page.</p>
+    <p>
+      To test injected content scripts go to any <a href="https://github.com/MitsuhaKitsune/vuex-webextensions">Github url</a> and check the bar injected on the top of the page.
+    </p>
     <p>Created by <a href="https://mitsuhakitsune.tk/">Mitsuha Kitsune</a></p>
   </div>
 </template>
@@ -26,6 +28,10 @@ export default {
 
   methods: {
     ...mapActions(['incrementCounter', 'decrementCounter']),
+
+    updateName(e) {
+      this.$store.commit('UPDATE_NAME', e.target.value);
+    },
   },
 };
 </script>

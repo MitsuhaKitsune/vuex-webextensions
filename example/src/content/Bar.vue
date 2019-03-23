@@ -4,7 +4,7 @@
     <div><h4>Vuex WebExtensions injected content script example</h4></div>
     <div id="vwe-bar-right">
       <div>Timer: {{ this.timer }}</div>
-      <div>Name: <input type="text" name="name" v-model="name"></div>
+      <div>Name: <input type="text" :value="name" @input="updateName" /></div>
       <div>Counter: {{ this.counter }} <button v-on:click="decrementCounter">-</button><button v-on:click="incrementCounter">+</button></div>
     </div>
   </div>
@@ -22,6 +22,10 @@ export default {
 
   methods: {
     ...mapActions(['incrementCounter', 'decrementCounter']),
+
+    updateName(e) {
+      this.$store.commit('UPDATE_NAME', e.target.value);
+    },
   },
 };
 </script>
