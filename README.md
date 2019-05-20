@@ -56,6 +56,14 @@ Then `stateone` and `statetwo` gona have the value commited by last mutation aft
 
 ## Changelog
 
+##### 1.2.7
+
+- Fix state sync on non persistent extensions, thanks to @KBoyarchuk, @mchusovlianov and @k1nghat
+- Allow unit testing when window are undefined, thanks to @blimmer
+- Don't process messages without type
+- Fix grammar typos on error messages, thanks to @jonathan-s
+- Update dependencies and fix some vulnerabilities
+
 ##### 1.2.6
 
 - Remarkable performance improvement on persistent states, thanks to @KBoyarchuk
