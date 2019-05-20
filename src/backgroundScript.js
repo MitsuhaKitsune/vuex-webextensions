@@ -20,6 +20,13 @@ class BackgroundScript {
             ...this.store.state,
             ...filterObject(savedStates, this.settings.persistentStates)
           });
+
+          // Sync loaded state with all connections
+          if (this.connections.length > 0) {
+            for (var i = this.connections.length - 1; i >= 0; i--) {
+              this.syncCurrentState(this.connections[i]);
+            }
+          }
         }
       });
     }
@@ -71,10 +78,7 @@ class BackgroundScript {
     this.connections.push(connection);
 
     // Send current state
-    connection.postMessage({
-      type: '@@STORE_INITIAL_STATE',
-      data: this.store.state
-    });
+    this.syncCurrentState(connection);
   }
 
   onDisconnect(connection) {
@@ -92,6 +96,13 @@ class BackgroundScript {
 
     connection.receivedMutations.push(message.data);
     this.store.commit(message.data.type, message.data.payload);
+  }
+
+  syncCurrentState(connection) {
+    connection.postMessage({
+      type: '@@STORE_SYNC_STATE',
+      data: this.store.state
+    });
   }
 
   sendMutation(connection, mutation) {

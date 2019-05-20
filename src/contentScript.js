@@ -35,7 +35,7 @@ class ContentScript {
       return;
     }
 
-    if (message.type == '@@STORE_INITIAL_STATE') {
+    if (message.type == '@@STORE_SYNC_STATE') {
       this.store.replaceState(message.data);
       this.initialized = true;
       this.processPendingMutations();
