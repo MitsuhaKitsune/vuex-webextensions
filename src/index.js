@@ -9,7 +9,8 @@ import ContentScript from './contentScript';
 
 var defaultOptions = {
   connectionName: 'vuex-webextensions',
-  persistentStates: []
+  persistentStates: [],
+  ignoredMutations: []
 };
 
 export default function(opt) {

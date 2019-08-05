@@ -54,7 +54,27 @@ export default new Vuex.Store({
 
 Then `stateone` and `statetwo` gona have the value commited by last mutation after extension or browser restart.
 
+## Ignored mutations
+
+It's possible skip the sync on desired mutations adding their mutation type to ignoredMutations option.
+
+All mutations added to this list skip the sync process, you should update the value manually on desired contexts.
+
+```javascript
+export default new Vuex.Store({
+  ...
+  plugins: [VuexWebExtensions({
+      ignoredMutations: ['MUTATION_TYPE_ONE', 'MUTATION_TYPE_TWO']
+    })]
+});
+```
+
 ## Changelog
+
+##### 1.2.8
+
+- Implement ignoredMutations option to allow skip sync on the desired mutations, thanks to @tuantmtb for suggest it
+- Update dependencies and fix some vulnerabilities on it
 
 ##### 1.2.7
 

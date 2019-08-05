@@ -33,6 +33,11 @@ class BackgroundScript {
 
     // Hook mutations
     this.store.subscribe((mutation) => {
+      // If it's ignored mutation don't sync with the other contexts
+      if (this.settings.ignoredMutations.length > 0 && this.settings.ignoredMutations.includes(mutation.type)) {
+        return;
+      }
+
       // Send mutation to connections pool
       for (var i = this.connections.length - 1; i >= 0; i--) {
         // If received mutations list of connection is empty isn't his mutation, send it

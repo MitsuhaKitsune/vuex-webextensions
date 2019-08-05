@@ -51,6 +51,11 @@ class ContentScript {
   }
 
   hookMutation(mutation) {
+    // If it's ignored mutation don't sync with the other contexts
+    if (this.settings.ignoredMutations.length > 0 && this.settings.ignoredMutations.includes(mutation.type)) {
+      return;
+    }
+
     // If store isn't initialized yet, just enque the mutation to reaply it after sync
     if (!this.initialized) {
       return this.pendingMutations.push(mutation);
