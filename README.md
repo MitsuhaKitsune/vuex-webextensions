@@ -71,6 +71,10 @@ export default new Vuex.Store({
 
 ## Changelog
 
+##### 1.2.9
+
+- Reimplement the method of initialization of state, this fix the broken watchers and allow to check when the data are fully loaded
+
 ##### 1.2.8
 
 - Implement ignoredMutations option to allow skip sync on the desired mutations, thanks to @tuantmtb for suggest it

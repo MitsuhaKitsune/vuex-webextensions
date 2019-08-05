@@ -1,6 +1,6 @@
 {
   "name": "vuex-webextensions",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Use Vuex on WebExtensions on 'shared' context",
   "main": "dist/index.js",
   "files": [
