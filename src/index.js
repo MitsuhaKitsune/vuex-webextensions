@@ -27,6 +27,17 @@ export default function(opt) {
   const browser = new Browser();
 
   return function(str) {
+    // Inject the custom mutation to replace the state on load
+    str.registerModule('@@VWE_Helper', {
+      mutations: {
+        VWE_ReplaceState(state, payload) {
+          Object.keys(str.state).forEach(function(key) {
+            str.state[key] = payload[key];
+          });
+        }
+      }
+    });
+
     // Get type of script and initialize connection
     browser.isBackgroundScript(window).then(function(isBackground) {
       if (isBackground) {

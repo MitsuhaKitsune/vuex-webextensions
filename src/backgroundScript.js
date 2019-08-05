@@ -16,7 +16,7 @@ class BackgroundScript {
     if (this.settings.persistentStates.length) {
       this.browser.getPersistentStates().then((savedStates) => {
         if (savedStates !== null) {
-          this.store.replaceState({
+          this.store.commit('VWE_ReplaceState', {
             ...this.store.state,
             ...filterObject(savedStates, this.settings.persistentStates)
           });
