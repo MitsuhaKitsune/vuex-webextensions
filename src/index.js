@@ -30,7 +30,7 @@ export default function(opt) {
     // Inject the custom mutation to replace the state on load
     str.registerModule('@@VWE_Helper', {
       mutations: {
-        VWE_ReplaceState(state, payload) {
+        vweReplaceState(state, payload) {
           Object.keys(str.state).forEach(function(key) {
             str.state[key] = payload[key];
           });

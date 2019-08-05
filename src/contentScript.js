@@ -36,7 +36,7 @@ class ContentScript {
     }
 
     if (message.type == '@@STORE_SYNC_STATE') {
-      this.store.commit('VWE_ReplaceState', message.data);
+      this.store.commit('vweReplaceState', message.data);
       this.initialized = true;
       this.processPendingMutations();
     } else if (message.type == '@@STORE_SYNC_MUTATION') {
