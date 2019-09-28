@@ -51,14 +51,19 @@ class ContentScript {
   }
 
   hookMutation(mutation) {
-    // If it's ignored mutation don't sync with the other contexts
-    if (this.settings.ignoredMutations.length > 0 && this.settings.ignoredMutations.includes(mutation.type)) {
-      return;
-    }
-
     // If store isn't initialized yet, just enque the mutation to reaply it after sync
     if (!this.initialized) {
       return this.pendingMutations.push(mutation);
+    }
+
+    // If it's store initialization mutation don't send again to other contexts
+    if (mutation.type === 'vweReplaceState') {
+      return;
+    }
+
+    // If it's ignored mutation don't sync with the other contexts
+    if (this.settings.ignoredMutations.length > 0 && this.settings.ignoredMutations.includes(mutation.type)) {
+      return;
     }
 
     // If received mutations list are empty it's own mutation, send to background

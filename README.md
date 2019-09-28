@@ -71,6 +71,11 @@ export default new Vuex.Store({
 
 ## Changelog
 
+##### 1.2.10
+
+- Prevent the multiple initialization introduced on version 1.2.9
+- Fix logic error of ignoredMutations system
+
 ##### 1.2.9
 
 - Reimplement the method of initialization of state, this fix the broken watchers and allow to check when the data are fully loaded
