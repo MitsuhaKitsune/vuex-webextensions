@@ -6,9 +6,11 @@
 import BackgroundScript from './backgroundScript';
 import Browser from './browser';
 import ContentScript from './contentScript';
+import Logger from './logger';
 
 var defaultOptions = {
   connectionName: 'vuex-webextensions',
+  loggerLevel: 'warning',
   persistentStates: [],
   ignoredMutations: []
 };
@@ -19,12 +21,15 @@ export default function(opt) {
     return () => {}; // eslint-disable-line no-empty-function
   }
 
+  // Merge default options with passed settings
   const options = {
     ...defaultOptions,
     ...opt
   };
 
-  const browser = new Browser();
+  // Initialize logger and browser class
+  const logger = new Logger(options.loggerLevel);
+  const browser = new Browser(logger);
 
   return function(str) {
     // Inject the custom mutation to replace the state on load
@@ -41,10 +46,10 @@ export default function(opt) {
     // Get type of script and initialize connection
     browser.isBackgroundScript(window).then(function(isBackground) {
       if (isBackground) {
-        return new BackgroundScript(str, browser, options);
+        return new BackgroundScript(logger, str, browser, options);
       }
 
-      return new ContentScript(str, browser, options);
+      return new ContentScript(logger, str, browser, options);
     });
   };
 }

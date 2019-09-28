@@ -69,6 +69,23 @@ export default new Vuex.Store({
 });
 ```
 
+## Logger level
+
+It's possible specify the minimun logging level of the plugin with the `loggerLevel` option, by default only warnings and errors gona be printed on console.
+
+The available options are: debug, verbose, info, warning, error and none.
+
+The none option disable all logging related with the plugin.
+
+```javascript
+export default new Vuex.Store({
+  ...
+  plugins: [VuexWebExtensions({
+      loggerLevel: 'debug'
+    })]
+});
+```
+
 ## Changelog
 
 ##### 1.2.10

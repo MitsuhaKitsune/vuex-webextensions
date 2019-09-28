@@ -6,7 +6,8 @@
 import { filterObject } from './utils';
 
 class BackgroundScript {
-  constructor(store, browser, settings) {
+  constructor(logger, store, browser, settings) {
+    this.logger = logger;
     this.store = store;
     this.browser = browser;
     this.settings = settings;
@@ -14,8 +15,12 @@ class BackgroundScript {
 
     // Restore persistent state datas from localstorage
     if (this.settings.persistentStates.length) {
+      this.logger.info('Persistent states detected on config, reading from localstorage...');
+
       this.browser.getPersistentStates().then((savedStates) => {
         if (savedStates !== null) {
+          this.logger.verbose('Saved persistent states found on localstorage');
+
           this.store.commit('vweReplaceState', {
             ...this.store.state,
             ...filterObject(savedStates, this.settings.persistentStates)
@@ -23,18 +28,25 @@ class BackgroundScript {
 
           // Sync loaded state with all connections
           if (this.connections.length > 0) {
+            this.logger.info('Sending initial state to other contexts...');
+
             for (var i = this.connections.length - 1; i >= 0; i--) {
               this.syncCurrentState(this.connections[i]);
             }
           }
+        } else {
+          this.logger.debug('No data found on localstorage for persistent states');
         }
       });
     }
 
     // Hook mutations
     this.store.subscribe((mutation) => {
+      this.logger.debug('Hooked mutation (' + mutation.type + ')');
+
       // If it's ignored mutation don't sync with the other contexts
       if (this.settings.ignoredMutations.length > 0 && this.settings.ignoredMutations.includes(mutation.type)) {
+        this.logger.info('Mutation (' + mutation.type + ') are on ignored mutations list, skiping...');
         return;
       }
 
@@ -104,17 +116,27 @@ class BackgroundScript {
   }
 
   syncCurrentState(connection) {
-    connection.postMessage({
-      type: '@@STORE_SYNC_STATE',
-      data: this.store.state
-    });
+    try {
+      connection.postMessage({
+        type: '@@STORE_SYNC_STATE',
+        data: this.store.state
+      });
+    } catch (err) {
+      this.logger.error('Initial state not sent: ' + err);
+    }
   }
 
   sendMutation(connection, mutation) {
-    connection.postMessage({
-      type: '@@STORE_SYNC_MUTATION',
-      data: mutation
-    });
+    this.logger.verbose('Sending mutation (' + mutation.type + ') to connection: ' + connection.name);
+
+    try {
+      connection.postMessage({
+        type: '@@STORE_SYNC_MUTATION',
+        data: mutation
+      });
+    } catch (err) {
+      this.logger.error('Mutation not sent: ' + err);
+    }
   }
 }
 

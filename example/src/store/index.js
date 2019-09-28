@@ -20,6 +20,7 @@ export default new Vuex.Store({
   plugins: [
     VuexWebExtensions({
       persistentStates: ['name', 'counter'],
+      loggerLevel: 'verbose',
     }),
   ],
 });
