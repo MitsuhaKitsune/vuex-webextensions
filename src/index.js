@@ -12,7 +12,9 @@ var defaultOptions = {
   connectionName: 'vuex-webextensions',
   loggerLevel: 'warning',
   persistentStates: [],
-  ignoredMutations: []
+  ignoredMutations: [],
+  ignoredActions: [],
+  syncActions: true
 };
 
 export default function(opt) {

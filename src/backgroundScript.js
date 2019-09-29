@@ -72,6 +72,43 @@ class BackgroundScript {
       browser.savePersistentStates(filterObject(this.store.state, this.settings.persistentStates));
     });
 
+    // Hook actions (Vuex version => 2.5.0)
+    if (this.settings.syncActions == true) {
+      try {
+        Logger.verbose(`Listening for actions`);
+
+        this.store.subscribeAction((action) => {
+          Logger.debug(`Hooked action (${action.type})`);
+
+          // If it's ignored action don't sync with the other contexts
+          if (this.settings.ignoredActions.length > 0 && this.settings.ignoredActions.includes(action.type)) {
+            Logger.info(`Action (${action.type}) are on ignored actions list, skiping...`);
+
+            return;
+          }
+
+          // Send action to connections pool
+          for (var i = this.connections.length - 1; i >= 0; i--) {
+            // If received actions list of connection is empty isn't his action, send it
+            if (!this.connections[i].receivedActions.length) {
+              this.sendAction(this.connections[i], action);
+            }
+
+            // Check if is one of his actions
+            for (var j = this.connections[i].receivedActions.length - 1; j >= 0; j--) {
+              if (this.connections[i].receivedActions[j].type == action.type) {
+                this.connections[i].receivedActions.splice(j, 1);
+              } else if (i == 0) {
+                this.sendAction(this.connections[i], action);
+              }
+            }
+          }
+        });
+      } catch (err) {
+        Logger.info(`Can't sync actions because isn't available in your Vuex version, use Vuex v2.5.0 or later for this feature`);
+      }
+    }
+
     // Start listening for connections
     browser.handleConnection((connection) => {
       this.onConnection(connection);
@@ -84,8 +121,9 @@ class BackgroundScript {
       this.onDisconnect(conn);
     });
 
-    // Initialize empty list of receivedMutations
+    // Initialize empty lists of receivedMutations and receivedActions
     connection.receivedMutations = [];
+    connection.receivedActions = [];
 
     // Listen to messages
     connection.onMessage.addListener((message) => {
@@ -108,12 +146,29 @@ class BackgroundScript {
   }
 
   onMessage(connection, message) {
-    if (!message.type || message.type !== '@@STORE_SYNC_MUTATION') {
+    if (!message.type) {
       return;
     }
 
-    connection.receivedMutations.push(message.data);
-    this.store.commit(message.data.type, message.data.payload);
+    switch (message.type) {
+      // Process mutation messages from content scripts
+      case '@@STORE_SYNC_MUTATION': {
+        connection.receivedMutations.push(message.data);
+        this.store.commit(message.data.type, message.data.payload);
+        break;
+      }
+
+      // Process action messages from content scripts
+      case '@@STORE_SYNC_ACTION': {
+        connection.receivedActions.push(message.data);
+        this.store.dispatch(message.data.type, message.data.payload);
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
   }
 
   syncCurrentState(connection) {
@@ -137,6 +192,19 @@ class BackgroundScript {
       });
     } catch (err) {
       Logger.error(`Mutation not sent: ${err}`);
+    }
+  }
+
+  sendAction(connection, action) {
+    Logger.verbose(`Sending action (${action.type}) to connection: ${connection.name}`);
+
+    try {
+      connection.postMessage({
+        type: '@@STORE_SYNC_ACTION',
+        data: action
+      });
+    } catch (err) {
+      Logger.error(`Action not sent: ${err}`);
     }
   }
 }

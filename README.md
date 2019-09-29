@@ -54,17 +54,38 @@ export default new Vuex.Store({
 
 Then `stateone` and `statetwo` gona have the value commited by last mutation after extension or browser restart.
 
-## Ignored mutations
+## Propagated actions
 
-It's possible skip the sync on desired mutations adding their mutation type to ignoredMutations option.
+On version 2.5.0 vuex introduce a new method on their API to watch and hook any action of store, this plugin sync actions
+like mutations by default.
 
-All mutations added to this list skip the sync process, you should update the value manually on desired contexts.
+Note: Event objects (like click for example) on action payload are automatically trimmered because cause serialization errors, you can pass value or object as payload anyways always that are serializable.
+
+If you want to disable the actions sync, just set `syncActions` to false on the plugin settings.
 
 ```javascript
 export default new Vuex.Store({
   ...
   plugins: [VuexWebExtensions({
-      ignoredMutations: ['MUTATION_TYPE_ONE', 'MUTATION_TYPE_TWO']
+      syncActions: false
+    })]
+});
+```
+
+You can ignore specific actions like mutations too on `ignoredActions` list.
+
+## Ignored mutations and actions
+
+It's possible skip the sync on desired mutations or actions adding their type to ignoredMutations or ignoredActions option.
+
+All mutations or actions added to this list skip the sync process, you should update the value or process manually on desired contexts.
+
+```javascript
+export default new Vuex.Store({
+  ...
+  plugins: [VuexWebExtensions({
+      ignoredMutations: ['MUTATION_TYPE_ONE', 'MUTATION_TYPE_TWO'],
+      ignoredActions: ['ACTION_TYPE_ONE', 'ACTION_TYPE_TWO']
     })]
 });
 ```

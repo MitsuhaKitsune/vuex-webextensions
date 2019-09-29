@@ -15,8 +15,10 @@ class ContentScript {
       .substr(2, 9);
     this.connection = null;
     this.receivedMutations = [];
+    this.receivedActions = [];
     this.initialized = false;
     this.pendingMutations = [];
+    this.pendingActions = [];
 
     // Connect to background script
     this.connection = browser.connectToBackground(`${this.settings.connectionName}_${this.scriptId}`);
@@ -27,9 +29,27 @@ class ContentScript {
     });
 
     // Hook mutations
+    Logger.verbose(`Listening for mutations`);
     this.store.subscribe((mutation) => {
       this.hookMutation(mutation);
     });
+
+    // Hook actions (Vuex version >= 2.5.0)
+    if (this.settings.syncActions == true) {
+      try {
+        Logger.verbose(`Listening for actions`);
+        this.store.subscribeAction((action) => {
+          // Clean event object on payload, this produce error on webextensions messaging serialization ("The object could not be cloned.")
+          if (action.payload instanceof Event) {
+            action.payload = null;
+          }
+
+          this.hookAction(action);
+        });
+      } catch (err) {
+        Logger.info(`Can't sync actions because isn't available in your Vuex version, use Vuex v2.5.0 or later for this feature`);
+      }
+    }
   }
 
   /**
@@ -38,7 +58,7 @@ class ContentScript {
    * @returns {null} This function didn't return any value
    */
   onMessage(message) {
-    Logger.debug(`Received message from background`);
+    Logger.verbose(`Received message from background`);
 
     // Don't process messages without type property, aren't from the plugin
     if (!message.type) {
@@ -67,6 +87,21 @@ class ContentScript {
 
         this.receivedMutations.push(message.data);
         this.store.commit(message.data.type, message.data.payload);
+        break;
+      }
+
+      // Process action messages from background script
+      case '@@STORE_SYNC_ACTION': {
+        Logger.debug(`Received action ${message.data.type}`);
+
+        // Don't commit any action from other contexts before the initial state sync
+        if (!this.initialized) {
+          Logger.info(`Received action (${message.data.type}) but the store isn't initilized yet`);
+          break;
+        }
+
+        this.receivedActions.push(message.data);
+        this.store.dispatch(message.data);
         break;
       }
 
@@ -122,6 +157,44 @@ class ContentScript {
   }
 
   /**
+   * Hook for retrieve the comited actions from content script.
+   * @param {object} action - Action comited on content script store.
+   * @returns {null} This function didn't return any value
+   */
+  hookAction(action) {
+    Logger.debug(`Hooked action (${action.type})`);
+
+    // If it's ignored action don't sync with the other contexts
+    if (this.settings.ignoredActions.length > 0 && this.settings.ignoredActions.includes(action.type)) {
+      Logger.info(`Action (${action.type}) are on ignored action list, skiping...`);
+
+      return;
+    }
+
+    // If store isn't initialized yet, just enque the action to reaply it after sync
+    if (!this.initialized) {
+      Logger.info(`Hooked action (${action.type}) before initialization, enqued on pending actions`);
+
+      return this.pendingActions.push(action);
+    }
+
+    // If received actions list are empty it's own action, send to background
+    if (!this.receivedActions.length) {
+      return this.sendAction(action);
+    }
+
+    // Check if it's received action, if it's just ignore it, if not send to background
+    for (var i = this.receivedActions.length - 1; i >= 0; i--) {
+      if (this.receivedActions[i].type == action.type && this.receivedActions[i].payload == action.payload) {
+        Logger.verbose(`Action ${this.receivedActions[i].type} it's received action, don't send to background again`);
+        this.receivedActions.splice(i, 1);
+      } else if (i == 0) {
+        this.sendAction(action);
+      }
+    }
+  }
+
+  /**
    * Helper function to send mutations to background script.
    * @param {object} mutation - The mutation to send.
    * @returns {null} This function didn't return any value
@@ -132,6 +205,20 @@ class ContentScript {
     this.connection.postMessage({
       type: '@@STORE_SYNC_MUTATION',
       data: mutation
+    });
+  }
+
+  /**
+   * Helper function to send actions to background script.
+   * @param {object} action - The action to send.
+   * @returns {null} This function didn't return any value
+   */
+  sendAction(action) {
+    Logger.debug(`Sending action (${action.type}) to background script`);
+
+    this.connection.postMessage({
+      type: '@@STORE_SYNC_ACTION',
+      data: action
     });
   }
 
@@ -154,6 +241,28 @@ class ContentScript {
 
       // Clean the pending mutation when are applied
       this.pendingMutations.splice(i, 1);
+    }
+  }
+
+  /**
+   * Process pending actions queue.
+   * @returns {null} This function didn't return any value
+   */
+  processPendingActions() {
+    Logger.debug(`Processing pending actions list...`);
+
+    if (!this.pendingActions.length) {
+      Logger.info(`The pending actions list are empty`);
+
+      return;
+    }
+
+    for (var i = 0; i < this.pendingActions.length; i++) {
+      Logger.verbose(`Processing pending action (${this.pendingActions[i].type}) with payload: ${this.pendingActions[i].payload}`);
+      this.store.dispatch(this.pendingActions[i].type, this.pendingActions[i].payload);
+
+      // Clean the pending action when are applied
+      this.pendingActions.splice(i, 1);
     }
   }
 }
