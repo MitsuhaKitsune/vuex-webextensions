@@ -3,9 +3,10 @@
  *  Licensed under the MIT license.
  */
 
+import Logger from './logger';
+
 class ContentScript {
-  constructor(logger, store, browser, settings) {
-    this.logger = logger;
+  constructor(store, browser, settings) {
     this.store = store;
     this.browser = browser;
     this.settings = settings;
@@ -37,7 +38,7 @@ class ContentScript {
    * @returns {null} This function didn't return any value
    */
   onMessage(message) {
-    this.logger.debug(`Received message from background`);
+    Logger.debug(`Received message from background`);
 
     // Don't process messages without type property, aren't from the plugin
     if (!message.type) {
@@ -47,7 +48,7 @@ class ContentScript {
     switch (message.type) {
       // Process initial state from the background
       case '@@STORE_SYNC_STATE': {
-        this.logger.info(`Received store initial state`);
+        Logger.info(`Received store initial state`);
         this.store.commit('vweReplaceState', message.data);
         this.initialized = true;
         this.processPendingMutations();
@@ -56,11 +57,11 @@ class ContentScript {
 
       // Process mutation messages from background script
       case '@@STORE_SYNC_MUTATION': {
-        this.logger.debug(`Received mutation ${message.data.type}`);
+        Logger.debug(`Received mutation ${message.data.type}`);
 
         // Don't commit any mutation from other contexts before the initial state sync
         if (!this.initialized) {
-          this.logger.info(`Received mutation (${message.data.type}) but the store isn't initilized yet`);
+          Logger.info(`Received mutation (${message.data.type}) but the store isn't initilized yet`);
           break;
         }
 
@@ -81,25 +82,25 @@ class ContentScript {
    * @returns {null} This function didn't return any value
    */
   hookMutation(mutation) {
-    this.logger.debug(`Hooked mutation (${mutation.type})`);
+    Logger.debug(`Hooked mutation (${mutation.type})`);
 
     // If it's store initialization mutation don't send again to other contexts
     if (mutation.type === 'vweReplaceState') {
-      this.logger.debug(`vweReplaceState mutation don't need send to other contexts`);
+      Logger.debug(`vweReplaceState mutation don't need send to other contexts`);
 
       return;
     }
 
     // If it's ignored mutation don't sync with the other contexts
     if (this.settings.ignoredMutations.length > 0 && this.settings.ignoredMutations.includes(mutation.type)) {
-      this.logger.info(`Mutation (${mutation.type}) are on ignored mutations list, skiping...`);
+      Logger.info(`Mutation (${mutation.type}) are on ignored mutations list, skiping...`);
 
       return;
     }
 
     // If store isn't initialized yet, just enque the mutation to reaply it after sync
     if (!this.initialized) {
-      this.logger.info(`Hooked mutation (${mutation.type}) before initialization, enqued on pending mutations`);
+      Logger.info(`Hooked mutation (${mutation.type}) before initialization, enqued on pending mutations`);
 
       return this.pendingMutations.push(mutation);
     }
@@ -112,7 +113,7 @@ class ContentScript {
     // Check if it's received mutation, if it's just ignore it, if not send to background
     for (var i = this.receivedMutations.length - 1; i >= 0; i--) {
       if (this.receivedMutations[i].type == mutation.type && this.receivedMutations[i].payload == mutation.payload) {
-        this.logger.verbose(`Mutation ${this.receivedMutations[i].type} it's received mutation, don't send to background again`);
+        Logger.verbose(`Mutation ${this.receivedMutations[i].type} it's received mutation, don't send to background again`);
         this.receivedMutations.splice(i, 1);
       } else if (i == 0) {
         this.sendMutation(mutation);
@@ -126,7 +127,7 @@ class ContentScript {
    * @returns {null} This function didn't return any value
    */
   sendMutation(mutation) {
-    this.logger.debug(`Sending mutation (${mutation.type}) to background script`);
+    Logger.debug(`Sending mutation (${mutation.type}) to background script`);
 
     this.connection.postMessage({
       type: '@@STORE_SYNC_MUTATION',
@@ -139,16 +140,16 @@ class ContentScript {
    * @returns {null} This function didn't return any value
    */
   processPendingMutations() {
-    this.logger.debug(`Processing pending mutations list...`);
+    Logger.debug(`Processing pending mutations list...`);
 
     if (!this.pendingMutations.length) {
-      this.logger.info(`The pending mutations list are empty`);
+      Logger.info(`The pending mutations list are empty`);
 
       return;
     }
 
     for (var i = 0; i < this.pendingMutations.length; i++) {
-      this.logger.verbose(`Processing pending mutation (${this.pendingMutations[i].type}) with payload: ${this.pendingMutations[i].payload}`);
+      Logger.verbose(`Processing pending mutation (${this.pendingMutations[i].type}) with payload: ${this.pendingMutations[i].payload}`);
       this.store.commit(this.pendingMutations[i].type, this.pendingMutations[i].payload);
 
       // Clean the pending mutation when are applied

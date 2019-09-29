@@ -8,6 +8,8 @@
 
 /* global chrome, browser */
 
+import Logger from './logger';
+
 var browsers = Object.freeze({
   firefox: {
     name: 'Mozilla Firefox',
@@ -29,8 +31,7 @@ var browsers = Object.freeze({
 });
 
 class Browser {
-  constructor(logger) {
-    this.logger = logger;
+  constructor() {
     this.browser = null;
     this.detectBrowser();
   }
@@ -118,7 +119,7 @@ class Browser {
           '@@vwe-persistence': datas
         });
       } catch (err) {
-        this.logger.error(`Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
+        Logger.error(`Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
       }
     } else if (this.browser == browsers.firefox) {
       try {
@@ -126,7 +127,7 @@ class Browser {
           '@@vwe-persistence': datas
         });
       } catch (err) {
-        this.logger.error(`Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
+        Logger.error(`Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
       }
     } else if (this.browser == browsers.edge) {
       try {
@@ -134,7 +135,7 @@ class Browser {
           '@@vwe-persistence': datas
         });
       } catch (err) {
-        this.logger.error(`Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
+        Logger.error(`Can't write persistent states to local storage. Did you grant storage permission to your WebExtension?`);
       }
     }
   }

@@ -27,9 +27,11 @@ export default function(opt) {
     ...opt
   };
 
-  // Initialize logger and browser class
-  const logger = new Logger(options.loggerLevel);
-  const browser = new Browser(logger);
+  // Set level of logs
+  Logger.setLoggerLevel(options.loggerLevel);
+
+  // Initialize browser class
+  const browser = new Browser();
 
   return function(str) {
     // Inject the custom mutation to replace the state on load
@@ -46,10 +48,10 @@ export default function(opt) {
     // Get type of script and initialize connection
     browser.isBackgroundScript(window).then(function(isBackground) {
       if (isBackground) {
-        return new BackgroundScript(logger, str, browser, options);
+        return new BackgroundScript(str, browser, options);
       }
 
-      return new ContentScript(logger, str, browser, options);
+      return new ContentScript(str, browser, options);
     });
   };
 }
