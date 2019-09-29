@@ -109,6 +109,13 @@ export default new Vuex.Store({
 
 ## Changelog
 
+##### 1.3.0
+
+- Added ability to sync actions with vuex v2.5.0 or later
+- Implemented logger for advanced debug of the plugin
+- Updated dependencies and fix some vulnerabilities on it
+- Some adjustments on es-lint and editorconfig rules
+
 ##### 1.2.10
 
 - Prevent the multiple initialization introduced on version 1.2.9
