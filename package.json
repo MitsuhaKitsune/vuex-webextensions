@@ -49,7 +49,8 @@
     "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1",
     "rimraf": "^2.7.1",
-    "rollup": "^1.27.9"
+    "rollup": "^1.27.9",
+    "rollup-plugin-babel": "^4.3.3"
   },
   "peerDependencies": {
     "vue": ">=2.0.0",

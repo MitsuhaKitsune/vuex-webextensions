@@ -3,6 +3,9 @@
 [![NPM](https://nodei.co/npm/vuex-webextensions.png)](https://npmjs.org/package/vuex-webextensions)
 
 [![Build Status](https://travis-ci.org/MitsuhaKitsune/vuex-webextensions.svg?branch=master)](https://travis-ci.org/MitsuhaKitsune/vuex-webextensions)
+[![npm:size:gzip](https://img.shields.io/bundlephobia/minzip/vuex-webextensions.svg?label=npm:size:gzip)](https://bundlephobia.com/result?p=vuex-webextensions)
+[![npm](https://img.shields.io/npm/dw/vuex-webextensions.svg?colorB=ff0033)](https://www.npmjs.com/package/vuex-webextensions)
+[![codebeat badge](https://codebeat.co/badges/9d11664e-6c99-4edb-9f5a-34298d9684d2)](https://codebeat.co/projects/github-com-mitsuhakitsune-vuex-webextensions-master)
 
 A Node.JS module to use Vuex on WebExtensions on "shared" context, the module allows you to start several instances of Vuex store and keep them synchronized throught WebExtensions messaging API.
 
