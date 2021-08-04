@@ -38,7 +38,7 @@ class Browser {
 
   detectBrowser() {
     if (typeof chrome !== 'undefined') {
-      if (typeof browser !== 'undefined') {
+      if (typeof InstallTrigger !== 'undefined') {
         this.browser = browsers.firefox;
 
         return;
