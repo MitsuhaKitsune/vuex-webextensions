@@ -38,7 +38,7 @@ class Browser {
 
   detectBrowser() {
     if (typeof chrome !== 'undefined') {
-      if (typeof browser !== 'undefined' && !HTMLCollection.prototype.isPrototypeOf.call(browser) && !HTMLElement.prototype.isPrototypeOf.call(browser)) {
+      if (typeof browser !== 'undefined' && typeof InstallTrigger !== 'undefined') {
         this.browser = browsers.firefox;
 
         return;
