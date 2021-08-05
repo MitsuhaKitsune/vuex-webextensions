@@ -1,7 +1,17 @@
 {
   "name": "vuex-webextensions",
-  "version": "1.3.1",
   "description": "Use Vuex on WebExtensions on 'shared' context",
+  "version": "1.3.1",
+  "author": "Mitsuha Kitsune <contact@mitsuhakitsune.com> (https://mitsuhakitsune.com/)",
+  "license": "MIT",
+  "homepage": "https://github.com/MitsuhaKitsune/vuex-webextensions#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MitsuhaKitsune/vuex-webextensions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MitsuhaKitsune/vuex-webextensions/issues"
+  },
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,10 +25,6 @@
     "prettier:write": "npm run prettier -- --write",
     "test": "echo \"Tests aren't ready for now\" && exit 0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MitsuhaKitsune/vuex-webextensions.git"
-  },
   "keywords": [
     "vuex",
     "webextension",
@@ -27,12 +33,6 @@
     "firefox",
     "chrome"
   ],
-  "author": "Mitsuha Kitsune <kitsunemitsuha@gmail.com> (https://mitsuhakitsune.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/MitsuhaKitsune/vuex-webextensions/issues"
-  },
-  "homepage": "https://github.com/MitsuhaKitsune/vuex-webextensions#readme",
   "devDependencies": {
     "@babel/cli": "^7.7.5",
     "@babel/core": "^7.7.5",

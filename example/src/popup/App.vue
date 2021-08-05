@@ -10,9 +10,9 @@
     <p>Timer aren't persistent by default and it's handled by background script increasing the value each second.</p>
     <p>Name and counter are persistent and handle data entered by user on any part of the webextension.</p>
     <p>
-      To test injected content scripts go to any <a href="https://github.com/MitsuhaKitsune/vuex-webextensions">Github url</a> and check the bar injected on the top of the page.
+      To test injected content scripts go to any <a href="https://github.com/MitsuhaKitsune/vuex-webextensions">GitHub url</a> and check the bar injected on the top of the page.
     </p>
-    <p>Created by <a href="https://mitsuhakitsune.tk/">Mitsuha Kitsune</a></p>
+    <p>Created by <a href="https://mitsuhakitsune.com/">Mitsuha Kitsune</a></p>
   </div>
 </template>
 

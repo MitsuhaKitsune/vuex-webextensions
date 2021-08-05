@@ -1,8 +1,17 @@
 {
-  "name": "vuex-webext-example",
-  "version": "1.0.0",
+  "name": "vuex-webextensions-example",
   "description": "A webextension example for Vuex WebExtensions",
-  "author": "Mitsuha Kitsune <kitsunemitsuha@gmail.com>",
+  "version": "1.0.0",
+  "author": "Mitsuha Kitsune <contact@mitsuhakitsune.com> (https://mitsuhakitsune.com/)",
+  "license": "MIT",
+  "homepage": "https://github.com/MitsuhaKitsune/vuex-webextensions#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MitsuhaKitsune/vuex-webextensions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MitsuhaKitsune/vuex-webextensions/issues"
+  },
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
     "precommit": "pretty-quick --staged",
