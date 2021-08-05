@@ -34,6 +34,7 @@ class Browser {
   constructor() {
     this.browser = null;
     this.detectBrowser();
+    Logger.info(`Detected browser: ${this.browser.name}`);
   }
 
   detectBrowser() {
