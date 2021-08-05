@@ -112,6 +112,10 @@ export default new Vuex.Store({
 
 ## Changelog
 
+##### 1.3.1
+
+- Fixed browser detection logic when browser it's defined as HTML element
+
 ##### 1.3.0
 
 - Added ability to sync actions with vuex v2.5.0 or later
