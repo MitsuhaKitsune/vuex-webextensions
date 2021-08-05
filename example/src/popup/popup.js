@@ -1,11 +1,10 @@
-import Vue from 'vue';
-import App from './App';
-import store from '../store';
+import { createApp } from 'vue';
+import App from './App.vue';
+//aimport store from '../store'
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  store,
+const app = createApp(App);
 
-  render: h => h(App),
-});
+// Install the store instance as a plugin
+//app.use(store)
+
+app.mount('#app');

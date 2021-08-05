@@ -1,18 +1,15 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import VuexWebExtensions from '../../../src';
 
 import * as getters from './getters';
 import mutations from './mutations';
 import * as actions from './actions';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {
-    timer: 0,
-    name: 'Mitsuha',
-    counter: 0,
+export default createStore({
+  state() {
+    return {
+      count: 0,
+    };
   },
   getters,
   mutations,

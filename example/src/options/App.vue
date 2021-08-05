@@ -1,17 +1,14 @@
 <template>
   <div>
-    <p>Hello world!</p>
+    <p>options.js</p>
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
+  mounted() {
+    console.log('options.js mounted');
+  },
 };
 </script>
-
-<style scoped>
-p {
-  font-size: 20px;
-}
-</style>

@@ -16,8 +16,6 @@ module.exports = {
     'plugin:vue/essential',
     // https://github.com/standard/standard/blob/master/docs/RULES-en.md
     'standard',
-    // https://prettier.io/docs/en/index.html
-    'plugin:prettier/recommended',
   ],
   // required to lint *.vue files
   plugins: ['vue'],

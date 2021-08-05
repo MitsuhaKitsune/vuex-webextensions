@@ -1,7 +1,7 @@
 {
   "name": "Vuex WebExtensions example",
   "description": "A webextension example for Vuex WebExtensions",
-  "version": null,
+  "version": "0.1.0",
   "manifest_version": 2,
   "icons": {
     "48": "icons/icon_48.png",
@@ -30,6 +30,6 @@
       "css": ["content.css"]
     }
   ],
-  "permissions": ["https://github.com/*", "storage"],
+  "permissions": ["https://github.com/*", "storage", "activeTab"],
   "web_accessible_resources": ["content.js"]
 }
