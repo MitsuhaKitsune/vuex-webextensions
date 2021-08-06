@@ -112,6 +112,12 @@ export default new Vuex.Store({
 
 ## Changelog
 
+##### 1.3.3
+
+- Rollback builds to babel meanwhile I investigate a error on builds with rollup
+- Allow use of submodules states in persistent states options
+- Some minor typos fixed on example extension
+
 ##### 1.3.2
 
 - Fixed build on npm (Thanks to @TCashion)
